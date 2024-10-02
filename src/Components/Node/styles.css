@@ -1,0 +1,27 @@
+g {
+    cursor: pointer;
+}
+
+.default {
+    rect {
+        fill: white;
+    }
+}
+
+.online {
+    rect {
+        fill: #88fcc8;
+    }
+}
+
+.offline {
+    rect {
+        fill: #f54287
+    }
+}
+
+.rebooting {
+    rect {
+        fill: #fcdc83;
+    }
+}
