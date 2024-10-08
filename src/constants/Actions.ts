@@ -1,5 +1,5 @@
 export enum Actions {
-    On = 0,
-    Off = 1,
-    Reboot = 2,
+    On = 'On',
+    Off = 'Off',
+    Reboot = 'Reboot',
 }

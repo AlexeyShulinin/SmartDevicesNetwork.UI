@@ -1,0 +1,15 @@
+.pagination {
+    margin: 12px;
+}
+
+.flex-container-centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    column-gap: 12px;
+}
+
+.page-button {
+    min-width: auto !important;
+}

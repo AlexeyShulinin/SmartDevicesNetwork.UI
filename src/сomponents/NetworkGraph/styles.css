@@ -1,0 +1,10 @@
+.container {
+    min-width: 100%;
+    min-height: 100%;
+}
+
+.svg-root {
+    display: block;
+    border: 2px solid #c1d6f7;
+    box-shadow: 4px 4px 8px 0px #223c50;
+}
