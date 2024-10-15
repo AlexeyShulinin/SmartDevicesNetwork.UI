@@ -9,23 +9,36 @@ interface IDeviceLogsProps {
     limit: number;
 }
 
-export const useDeviceLogs = ({ deviceId, limit }: IDeviceLogsProps) => {
+type UseDeviceLogsReturnType = {
+    isLoading: boolean;
+    deviceLogs: IPagedListResponse<IDeviceLogsResponse> | null;
+    fetchNextPage: (page: number) => void;
+};
+
+export const useDeviceLogs = ({
+    deviceId,
+    limit,
+}: IDeviceLogsProps): UseDeviceLogsReturnType => {
     const [isLoading, setIsLoading] = useState(false);
     const [deviceLogs, setDeviceLogs] =
         useState<IPagedListResponse<IDeviceLogsResponse> | null>(null);
 
     const fetchDeviceLogs = useCallback((request: IDeviceLogsPagedRequest) => {
-        setIsLoading(true);
-        fetch(
-            `${import.meta.env.VITE_API_BASE_URL}/api/devices/${request.deviceId}/logs`,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
+        const getDeviceLogs = async () =>
+            fetch(
+                `${import.meta.env.VITE_API_BASE_URL}/api/devices/${request.deviceId}/logs`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(request.filter),
                 },
-                body: JSON.stringify(request.filter),
-            },
-        )
+            );
+
+        setIsLoading(true);
+
+        getDeviceLogs()
             .then((response) => response.json())
             .then((data) => camelize(data))
             .then((data) => setDeviceLogs(data))
@@ -33,20 +46,25 @@ export const useDeviceLogs = ({ deviceId, limit }: IDeviceLogsProps) => {
     }, []);
 
     useEffect(() => {
-        if (deviceId) {
-            fetchDeviceLogs({
-                deviceId: deviceId,
-                filter: { page: 0, limit: 5 },
-            });
+        if (!deviceId) {
+            return;
         }
-    }, [deviceId]);
 
-    const fetchNextPage = (page: number) => {
         fetchDeviceLogs({
             deviceId: deviceId,
-            filter: { page: page, limit: limit },
+            filter: { page: 0, limit: 5 },
         });
-    };
+    }, [deviceId]);
+
+    const fetchNextPage = useCallback(
+        (page: number) => {
+            fetchDeviceLogs({
+                deviceId: deviceId,
+                filter: { page: page, limit: limit },
+            });
+        },
+        [deviceId, limit],
+    );
 
     return {
         isLoading,

@@ -1,10 +1,12 @@
 .container {
     min-width: 100%;
-    min-height: 100%;
 }
 
 .svg-root {
     display: block;
     border: 2px solid #c1d6f7;
     box-shadow: 4px 4px 8px 0px #223c50;
+    min-width: 1000px;
+    min-height: calc(100vh - 100px);
+    width: 100%;
 }

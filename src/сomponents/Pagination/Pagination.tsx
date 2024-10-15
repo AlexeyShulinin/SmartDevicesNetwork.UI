@@ -30,8 +30,6 @@ export const Pagination: React.FC<IPaginationProps> = ({
         return null;
     }
 
-    console.log(page);
-
     return (
         <div className="pagination">
             <div className="flex-container-centered">
@@ -42,7 +40,7 @@ export const Pagination: React.FC<IPaginationProps> = ({
                     disabled={page === 0}
                 />
                 <>
-                    {startIndex * maxVisiblePages > pageNumbers?.length && (
+                    {startIndex * maxVisiblePages > pageNumbers.length && (
                         <>
                             <Button
                                 size="small"
@@ -54,11 +52,11 @@ export const Pagination: React.FC<IPaginationProps> = ({
                         </>
                     )}
                     {pageNumbers
-                        ?.slice(
+                        .slice(
                             startIndex * maxVisiblePages,
                             startIndex * maxVisiblePages + maxVisiblePages + 1,
                         )
-                        ?.map((pageNumber, index) => {
+                        .map((pageNumber, index) => {
                             return (
                                 <div key={index}>
                                     <Button
@@ -71,7 +69,7 @@ export const Pagination: React.FC<IPaginationProps> = ({
                                 </div>
                             );
                         })}
-                    {page + maxVisiblePages < pageNumbers?.length && (
+                    {page + maxVisiblePages < pageNumbers.length && (
                         <>
                             <span>...</span>
                             <Button
@@ -87,7 +85,7 @@ export const Pagination: React.FC<IPaginationProps> = ({
                     size="small"
                     icon={<ChevronRightFilled />}
                     onClick={() => onClick(page + 1)}
-                    disabled={page + 1 === pageNumbers?.length}
+                    disabled={page + 1 === pageNumbers.length}
                 />
             </div>
         </div>

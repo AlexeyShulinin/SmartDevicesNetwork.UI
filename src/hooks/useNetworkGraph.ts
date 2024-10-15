@@ -12,36 +12,54 @@ interface IUseNetworkGraphProps {
     height: number;
 }
 
+type UseNetworkGraphReturnType = {
+    links: INetworkLink[];
+    nodes: INetworkNode[];
+    simulation: d3.Simulation<INetworkNode, undefined> | null;
+    isLoading: boolean;
+    filteredLinks: INetworkLink[];
+    filteredNodeIds: number[];
+    onFilterChange: (nodeIds: number[], links: INetworkLink[]) => void;
+};
+
 export const useNetworkGraph = ({
     networkLinks,
     networkNodes,
     width,
     height,
-}: IUseNetworkGraphProps) => {
+}: IUseNetworkGraphProps): UseNetworkGraphReturnType => {
     const [links, setLinks] = useState<INetworkLink[]>([]);
+    const [filteredLinks, setFilteredLinks] = useState<INetworkLink[]>([]);
     const [nodes, setNodes] = useState<INetworkNode[]>([]);
-    const [simulation, setSimulation] =
-        useState<d3.Simulation<INetworkNode, undefined>>();
+    const [filteredNodeIds, setFilteredNodeIds] = useState<number[]>([]);
+    const [simulation, setSimulation] = useState<d3.Simulation<
+        INetworkNode,
+        undefined
+    > | null>(null);
 
-    // TODO: Add alert to refresh if links were added/removed
     useEffect(() => {
-        if (networkNodes?.length > 0) {
-            setNodes((prevState) => [
-                ...prevState.map((prevNodeState) => {
-                    const currentNodeState =
-                        networkNodes.find(
-                            (node) => node.id === prevNodeState.id,
-                        ) || {};
-                    return {
-                        ...prevNodeState,
-                        ...currentNodeState,
-                    };
-                }),
-            ]);
+        if (!networkNodes?.length) {
+            return;
         }
+
+        setNodes((prevState) => [
+            ...prevState.map((prevNodeState) => {
+                const currentNodeState =
+                    networkNodes.find((node) => node.id === prevNodeState.id) ||
+                    {};
+                return {
+                    ...prevNodeState,
+                    ...currentNodeState,
+                };
+            }),
+        ]);
     }, [networkNodes]);
 
     useEffect(() => {
+        if (!width || !height) {
+            return;
+        }
+
         const mappedLinks: INetworkLink[] = networkLinks.map(
             (d) =>
                 ({
@@ -60,7 +78,7 @@ export const useNetworkGraph = ({
         );
         if (rootNode) {
             rootNode.x = 100;
-            rootNode.y = -500;
+            rootNode.y = -200;
         }
 
         // Create a simulation with several forces.
@@ -71,7 +89,7 @@ export const useNetworkGraph = ({
                 d3
                     .forceLink(mappedLinks)
                     .id((d) => (d as INetworkNode).id)
-                    .distance(150),
+                    .distance(200),
             )
             .force('charge', d3.forceManyBody().strength(-300))
             .force('center', d3.forceCenter(width / 2, height / 2))
@@ -99,17 +117,25 @@ export const useNetworkGraph = ({
                 });
             });
         setSimulation(simulation);
-    }, []);
+    }, [width, height]);
 
     const isLoading = useMemo(
         () => links?.length == 0 || nodes?.length == 0,
         [links, nodes],
     );
 
+    const onFilterChange = (nodeIds: number[], links: INetworkLink[]) => {
+        setFilteredNodeIds(nodeIds);
+        setFilteredLinks(links);
+    };
+
     return {
         links,
         nodes,
         simulation,
         isLoading,
+        filteredLinks,
+        filteredNodeIds,
+        onFilterChange,
     };
 };

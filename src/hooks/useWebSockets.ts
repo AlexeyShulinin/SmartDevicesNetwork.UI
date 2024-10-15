@@ -5,20 +5,29 @@ interface IUseWebSocketsProps {
     onMessage: (event: MessageEvent) => void;
 }
 
-export const useWebSockets = ({ uri, onMessage }: IUseWebSocketsProps) => {
+type UseWebSocketsReturnType = {
+    socket: WebSocket | null;
+};
+
+export const useWebSockets = ({
+    uri,
+    onMessage,
+}: IUseWebSocketsProps): UseWebSocketsReturnType => {
     const [socket, setSocket] = useState<WebSocket | null>(null);
     useEffect(() => {
-        if (!socket && uri && onMessage) {
-            const socket = new WebSocket(uri);
-            socket.binaryType = 'blob';
-
-            socket.onopen = () => console.log('Connection established');
-            socket.onclose = () => console.log('Connection lost');
-            socket.onmessage = onMessage;
-
-            setSocket(socket);
+        if (socket || !uri || !onMessage) {
+            return;
         }
-    }, [onMessage, uri]);
+
+        const webSocket = new WebSocket(uri);
+        webSocket.binaryType = 'blob';
+
+        webSocket.onopen = () => console.log('Connection established');
+        webSocket.onclose = () => console.log('Connection lost');
+        webSocket.onmessage = onMessage;
+
+        setSocket(webSocket);
+    }, [onMessage, socket, uri]);
 
     return { socket };
 };

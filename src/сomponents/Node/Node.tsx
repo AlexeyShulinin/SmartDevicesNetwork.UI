@@ -15,12 +15,14 @@ import {
 
 interface INodeProps {
     networkNode: INetworkNode;
-    simulation?: d3.Simulation<INetworkNode, undefined>;
+    simulation: d3.Simulation<INetworkNode, undefined> | null;
+    visible: boolean;
 }
 
 export const Node: React.FC<INodeProps> = ({
     networkNode,
     simulation,
+    visible,
 }): JSX.Element => {
     const { nodeRef } = useNode({ networkNode, simulation });
 
@@ -39,7 +41,7 @@ export const Node: React.FC<INodeProps> = ({
     return (
         <>
             <Toaster toasterId={toasterId} />
-            <g>
+            <g visibility={visible ? '' : 'hidden'}>
                 <g
                     transform={`translate(${networkNode.x + 20}, ${networkNode.y - 20})`}>
                     <foreignObject x="100" y="-5" width="110" height="40">

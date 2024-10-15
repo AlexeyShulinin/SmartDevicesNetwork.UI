@@ -4,6 +4,7 @@ import {
     TableColumnDefinition,
 } from '@fluentui/react-components';
 import { IDeviceLogsResponse } from '../../../interfaces/IDeviceLogsResponse.ts';
+import { formatDateFromString } from '../../../utils/dateUtils.ts';
 
 export const columns: TableColumnDefinition<IDeviceLogsResponse>[] = [
     createTableColumn<IDeviceLogsResponse>({
@@ -32,7 +33,7 @@ export const columns: TableColumnDefinition<IDeviceLogsResponse>[] = [
         renderCell: (item) => {
             return (
                 <TableCellLayout>
-                    {new Date(item.timeStamp).toLocaleString('ru-ru')}
+                    {formatDateFromString(item.timeStamp)}
                 </TableCellLayout>
             );
         },

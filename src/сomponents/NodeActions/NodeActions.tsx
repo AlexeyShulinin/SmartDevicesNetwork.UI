@@ -21,6 +21,7 @@ import { Modal } from '../Modal';
 import { INetworkNode } from '../../interfaces/INetworkNode.ts';
 import { Spinner } from '@fluentui/react';
 import './styles.css';
+import { DeviceDetails } from '../DeviceDetails';
 
 interface INodeActionsProps {
     networkNode: INetworkNode;
@@ -36,7 +37,10 @@ export const NodeActions: React.FC<INodeActionsProps> = ({
         status: networkNode.status,
         onAlertActionNotification: onAlert,
     });
-    const { isOpen, toggle } = useModal();
+
+    const { isOpen: isOpenDeviceLogs, toggle: onToggleDeviceLogs } = useModal();
+    const { isOpen: isOpenDeviceDetails, toggle: onToggleDeviceDetails } =
+        useModal();
 
     if (isLoading) {
         return <Spinner size={1} className="loader" />;
@@ -45,10 +49,16 @@ export const NodeActions: React.FC<INodeActionsProps> = ({
     return (
         <>
             <Modal
-                header={`[${networkNode.name}] logs`}
-                isOpen={isOpen}
-                onClose={toggle}>
+                header={`[${networkNode.name}]: logs`}
+                isOpen={isOpenDeviceLogs}
+                onClose={onToggleDeviceLogs}>
                 <DeviceLogs deviceId={networkNode.id} />
+            </Modal>
+            <Modal
+                header={`[${networkNode.name}]: details`}
+                isOpen={isOpenDeviceDetails}
+                onClose={onToggleDeviceDetails}>
+                <DeviceDetails deviceId={networkNode.id} />
             </Modal>
             <Toolbar aria-label="Default">
                 <ToolbarButton
@@ -70,7 +80,14 @@ export const NodeActions: React.FC<INodeActionsProps> = ({
                     </MenuTrigger>
                     <MenuPopover>
                         <MenuList>
-                            <MenuItem onClick={toggle}>Logs</MenuItem>
+                            <MenuItem onClick={onToggleDeviceLogs}>
+                                Logs
+                            </MenuItem>
+                        </MenuList>
+                        <MenuList>
+                            <MenuItem onClick={onToggleDeviceDetails}>
+                                Details
+                            </MenuItem>
                         </MenuList>
                     </MenuPopover>
                 </Menu>

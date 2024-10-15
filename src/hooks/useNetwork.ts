@@ -7,26 +7,24 @@ type UseNetworkReturnType = {
 };
 
 export const useNetwork = (): UseNetworkReturnType => {
-    const { socket } = useWebSockets({
-        uri: `${import.meta.env.VITE_API_BASE_URL}/ws`,
-        onMessage: onWebSocketMessage,
-    });
-
-    async function onWebSocketMessage(event: MessageEvent) {
-        setNetworkResponse(JSON.parse(await event.data.text()));
-    }
-
     const [networkResponse, setNetworkResponse] =
         useState<INetworkResponse | null>(null);
 
-    useEffect(() => {
-        fetchNetwork();
+    const { socket } = useWebSockets({
+        uri: `${import.meta.env.VITE_API_BASE_URL}/ws`,
+        onMessage: async (event: MessageEvent) => {
+            setNetworkResponse(JSON.parse(await event.data.text()));
+        },
+    });
 
+    useEffect(() => {
         function fetchNetwork() {
             fetch(`${import.meta.env.VITE_API_BASE_URL}/api/network`)
                 .then((response) => response.json())
                 .then((result) => setNetworkResponse(result));
         }
+
+        fetchNetwork();
 
         return () => {
             socket?.close();

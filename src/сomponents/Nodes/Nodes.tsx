@@ -5,11 +5,13 @@ import * as d3 from 'd3';
 
 interface INodesProps {
     networkNodes: INetworkNode[];
-    simulation?: d3.Simulation<INetworkNode, undefined>;
+    filteredNodeIds: number[];
+    simulation: d3.Simulation<INetworkNode, undefined> | null;
 }
 
 export const Nodes: React.FC<INodesProps> = ({
     networkNodes,
+    filteredNodeIds,
     simulation,
 }): JSX.Element => {
     return (
@@ -20,6 +22,9 @@ export const Nodes: React.FC<INodesProps> = ({
                         key={networkNode.id}
                         networkNode={networkNode}
                         simulation={simulation}
+                        visible={filteredNodeIds.some(
+                            (nodeId) => nodeId === networkNode.id,
+                        )}
                     />
                 );
             })}
