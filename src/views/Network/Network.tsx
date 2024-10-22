@@ -1,14 +1,13 @@
 import { JSX } from 'react';
-import { useNetwork } from './useNetwork.ts';
-import { NetworkGraph } from '../../Components/NetworkGraph';
+import { useNetwork } from '../../hooks/useNetwork.ts';
+import { NetworkGraph } from '../../сomponents/NetworkGraph';
+import { Spinner } from '@fluentui/react';
 
 export const Network = (): JSX.Element => {
     const { network } = useNetwork();
 
-    console.log('Network', network);
-
     if (!network) {
-        return <>Loading...</>;
+        return <Spinner />;
     }
 
     return (
