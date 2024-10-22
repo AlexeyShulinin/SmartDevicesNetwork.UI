@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import camelize from 'camelize';
 import { IDeviceResponse } from '../interfaces/IDeviceResponse.ts';
+import { STATUS_COLOR_MAP } from '../constants/StatusColorMapping.ts';
 
 interface IDeviceDetailsProps {
     deviceId: number;
@@ -49,20 +50,10 @@ export const useDeviceDetails = ({
             return;
         }
 
-        switch (deviceDetails.status.toLowerCase()) {
-            case 'online':
-                setStatusBadgeColor('available');
-                break;
-            case 'offline':
-                setStatusBadgeColor('offline');
-                break;
-            case 'rebooting':
-                setStatusBadgeColor('away');
-                break;
-            default:
-                setStatusBadgeColor('blocked');
-                break;
-        }
+        setStatusBadgeColor(
+            (STATUS_COLOR_MAP[deviceDetails.status.toLowerCase()] ||
+                STATUS_COLOR_MAP.default) as colorTypes,
+        );
     }, [deviceDetails]);
 
     return { isLoading, deviceDetails, deviceStatus };

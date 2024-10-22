@@ -59,6 +59,8 @@ export const useNode = ({
                 .on('drag', dragged)
                 .on('end', dragEnded),
         );
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [nodeRef]);
 
     return {

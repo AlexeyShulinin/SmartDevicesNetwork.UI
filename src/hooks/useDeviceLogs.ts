@@ -54,7 +54,7 @@ export const useDeviceLogs = ({
             deviceId: deviceId,
             filter: { page: 0, limit: 5 },
         });
-    }, [deviceId]);
+    }, [deviceId, fetchDeviceLogs]);
 
     const fetchNextPage = useCallback(
         (page: number) => {
@@ -63,7 +63,7 @@ export const useDeviceLogs = ({
                 filter: { page: page, limit: limit },
             });
         },
-        [deviceId, limit],
+        [deviceId, fetchDeviceLogs, limit],
     );
 
     return {

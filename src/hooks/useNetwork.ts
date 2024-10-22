@@ -29,7 +29,7 @@ export const useNetwork = (): UseNetworkReturnType => {
         return () => {
             socket?.close();
         };
-    }, []);
+    }, [socket]);
 
     return {
         network: networkResponse,

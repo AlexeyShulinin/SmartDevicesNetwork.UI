@@ -28,12 +28,12 @@ export const useDeviceFilter = ({
     const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
     const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
 
-    const mapDistinctValues = () => {
-        setStatuses([...new Set(nodes.map((x) => x.status))]);
-        setTypes([...new Set(nodes.map((x) => x.type))]);
-    };
-
     useEffect(() => {
+        const mapDistinctValues = () => {
+            setStatuses([...new Set(nodes.map((x) => x.status))]);
+            setTypes([...new Set(nodes.map((x) => x.type))]);
+        };
+
         if (!nodes?.length) {
             return;
         }
@@ -43,7 +43,7 @@ export const useDeviceFilter = ({
             nodes.map((x) => x.id),
             links,
         );
-    }, [nodes]);
+    }, [links, nodes, onFilterChange]);
 
     useEffect(() => {
         let filteredNodes = nodes;
@@ -71,7 +71,7 @@ export const useDeviceFilter = ({
             filteredNodes.map((x) => x.id),
             filteredLinks,
         );
-    }, [selectedTypes, selectedStatuses, nodes]);
+    }, [selectedTypes, selectedStatuses, nodes, links, onFilterChange]);
 
     return {
         statuses,

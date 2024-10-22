@@ -116,7 +116,10 @@ export const useNetworkGraph = ({
                     ];
                 });
             });
+
         setSimulation(simulation);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [width, height]);
 
     const isLoading = useMemo(
